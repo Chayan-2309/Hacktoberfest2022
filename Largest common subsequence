@@ -1,0 +1,119 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    string x, y;
+    int option;
+    do
+    {
+        cout << "\n1. Quit.\n2. Enter strings.\n3. Display all possible LCSs.";
+        cout << "\nEnter your choice: ";
+        cin >> option;
+        switch (option)
+        {
+        case 1:
+            exit(0);
+            break;
+
+        case 2:
+            cout << "Enter string one: ";
+            cin >> x;
+            cout << "Enter string two: ";
+            cin >> y;
+            break;
+        case 3:
+            int m = x.length() + 1, n = y.length() + 1;
+            int a[m][n];
+            string b[m][n];
+            for (int i = 1; i < m; i++)
+            {
+                a[i][0] = 0;
+                b[i][0] = " ";
+            }
+            for (int j = 0; j < n; j++)
+            {
+                a[0][j] = 0;
+                b[0][j] = " ";
+            }
+            for (int i = 1; i < m; i++)
+            {
+                for (int j = 1; j < n; j++)
+                {
+                    if (x.at(i - 1) == y.at(j - 1))
+                    {
+                        a[i][j] = a[i - 1][j - 1] + 1;
+                        b[i][j] = "\\";
+                    }
+                    else if ((a[i - 1][j] >= a[i][j - 1]))
+                    {
+                        a[i][j] = a[i - 1][j];
+                        b[i][j] = "^";
+                    }
+                    else
+                    {
+                        a[i][j] = a[i][j - 1];
+                        b[i][j] = "<";
+                    }
+                }
+            }
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+
+                    cout << a[i][j] << b[i][j] << " ";
+                }
+                cout << "\n";
+            }
+            int max = a[m - 1][n - 1];
+            for (int o = m - 1; o > 0; o--)
+            {
+                if (a[o][n - 1] == max)
+                {
+
+                    for (int p = n - 1; p > 0; p--)
+                    {
+                        int i = o, j = p;
+                        string LCS = "";
+                        if (a[i][j] == max)
+                        {
+
+                            while (i > 0)
+                            {
+
+                                if (b[i][j] == "\\")
+                                {
+                                    LCS = LCS + x.at(i - 1);
+                                    i--;
+                                    j--;
+                                }
+                                else if (b[i][j] == "^")
+                                {
+                                    i--;
+                                }
+                                else
+                                {
+                                    j--;
+                                }
+                            }
+                            for (int i = LCS.length() - 1; i >= 0; i--)
+                                cout << LCS[i];
+                            cout << endl;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            break;
+        }
+    } while (option != 0);
+}
