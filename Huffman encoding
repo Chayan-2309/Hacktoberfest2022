@@ -1,0 +1,184 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<int> bits;
+vector<char> seq;
+struct MinHeapNode
+{
+
+    char data;
+
+    unsigned freq;
+
+    MinHeapNode *left, *right;
+
+    MinHeapNode(char data, unsigned freq)
+
+    {
+
+        left = right = NULL;
+        this->data = data;
+        this->freq = freq;
+    }
+};
+
+struct compare
+{
+
+    bool operator()(MinHeapNode *l, MinHeapNode *r)
+
+    {
+        return (l->freq > r->freq);
+    }
+};
+
+void printCodes(struct MinHeapNode *root, string str)
+{
+
+    if (!root)
+        return;
+
+    if (root->data != '$')
+    {
+        bits.push_back(str.length());
+        seq.push_back(root->data);
+        cout << root->data << ": " << str << "\n";
+    }
+
+    printCodes(root->left, str + "0");
+    printCodes(root->right, str + "1");
+}
+void printPreorder(struct MinHeapNode *node)
+{
+    if (node == NULL)
+        return;
+
+    cout << node->data << " ";
+
+    printPreorder(node->left);
+
+    printPreorder(node->right);
+}
+void HuffmanCodes(char data[], int freq[], int size)
+{
+    struct MinHeapNode *left, *right, *top;
+
+    priority_queue<MinHeapNode *, vector<MinHeapNode *>, compare> minHeap;
+
+    for (int i = 0; i < size; ++i)
+        minHeap.push(new MinHeapNode(data[i], freq[i]));
+
+    while (minHeap.size() != 1)
+    {
+
+        left = minHeap.top();
+        minHeap.pop();
+
+        right = minHeap.top();
+        minHeap.pop();
+
+        top = new MinHeapNode('$', left->freq + right->freq);
+
+        top->left = left;
+        top->right = right;
+
+        minHeap.push(top);
+    }
+    cout << "\npreorder traversal: " << endl;
+    printPreorder(minHeap.top());
+    cout << "\nHuffman codes: " << endl;
+    printCodes(minHeap.top(), "");
+}
+void display(char arr[], int freq[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << "char : " << arr[i] << " ";
+    }
+    cout << endl;
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << "freq : " << freq[i] << " ";
+    }
+}
+int main()
+{
+
+    int n;
+    char *a;
+    int *f;
+    int c;
+    do
+    {
+        cout << "**MENU**\n 0) Quit\n 1) Input n unique characters with their frequencies into an array\n 2) Display the array\n 3) Generate Huffman Tree and Traverse the tree with pre-order.\n 4)Generate Huffman Codes for n charachers and display the same.\n 5) Compare Huffman code with Fixed-Length Code\n";
+        cout << "Enter choice: ";
+        cin >> c;
+        switch (c)
+        {
+        case 0:
+        {
+            exit(0);
+            break;
+        }
+        case 1:
+            cout << "Enter limits: ";
+            cin >> n;
+            a = (char *)malloc(n * sizeof(char));
+            f = (int *)malloc(n * sizeof(int));
+            cout << "Enter characters: ";
+            for (int i = 0; i < n; i++)
+            {
+                cin >> a[i];
+            }
+            cout << "Enter frequencies: ";
+            for (int i = 0; i < n; i++)
+            {
+                cin >> f[i];
+            }
+            break;
+        case 2:
+            display(a, f, n);
+            break;
+
+        case 3:
+            HuffmanCodes(a, f, n);
+            break;
+        case 4:
+            HuffmanCodes(a, f, n);
+            break;
+        case 5:
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if ((int)seq[i] > (int)seq[j])
+                    {
+                        char temp1 = seq[i];
+                        seq[i] = seq[j];
+                        seq[j] = temp1;
+                        int temp = bits[i];
+                        bits[i] = bits[j];
+                        bits[j] = temp;
+                    }
+                }
+            }
+            int sum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                sum += f[i];
+            }
+            cout << "Total bits required without Huffman code: " << sum*3 << endl;
+            sum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                sum = sum + (f[i] * bits[i]);
+            }
+            cout << "Total bits required using huffman code: " << sum << endl;
+
+            break;
+        }
+    } while (c != 0);
+    HuffmanCodes(a, f, n);
+
+    return 0;
+}
