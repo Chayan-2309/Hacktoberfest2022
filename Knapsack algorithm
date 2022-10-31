@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main()
+{
+    int n;
+    float c;
+    float temp;
+    cout << "Enter capacity of knapsack: ";
+    cin >> c;
+    cout << "Enter the number of items: ";
+    cin >> n;
+    float w[n], v[n], r[n];
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter weight of item-" << i + 1 << ": ";
+        cin >> w[i];
+        cout << "Enter value of item-" << i + 1 << ": ";
+        cin >> v[i];
+        r[i] = v[i] / w[i];
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (r[i] > r[j])
+            {
+                temp = r[i];
+                r[i] = r[j];
+                r[j] = temp;
+                temp = w[i];
+                w[i] = w[j];
+                w[j] = temp;
+                temp = v[i];
+                v[i] = v[j];
+                v[j] = temp;
+            }
+        }
+    }
+    for (int i = 0; i < n; i++)
+    {
+        cout << w[i] << "\t\t" << v[i] << "\t\t" << r[i] << "\n";
+    }
+    int i = 0;
+    float profit = 0;
+    while (c != 0)
+    {
+        if (c >= w[i])
+        {
+            c = c - w[i];
+            profit = profit + v[i];
+        }
+        else
+        {
+            profit = profit + (r[i] * c);
+            c = 0;
+        }
+        i++;
+    }
+    cout << "Maximum profit: " << profit;
+}
