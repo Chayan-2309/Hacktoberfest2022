@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+void swap(int a, int b)
+{
+    int temp;
+    temp = a;
+    a = b;
+    b = temp;
+}
+void swapc(char a, char b)
+{
+    char temp;
+    temp = a;
+    a = b;
+    b = temp;
+}
+void printMaxActivities(int s[], int f[], char c[], int n, int choice)
+{
+    cout << "Following activities are selected: ";
+    int start, finish;
+    for (int i = 0; i < n; i++)
+    {
+        if (c[i] == choice)
+        {
+            start = s[i];
+            finish = f[i];
+        }
+    }
+    int i = 0;
+    if (c[0] == choice)
+        cout << c[0];
+    for (int j = 1; j < n; j++)
+    {
+        if (c[j] == choice)
+            cout << c[j];
+        if (s[j] >= f[i] && s[j] < start && f[j] < start)
+        {
+            cout << c[j] << " ";
+            i = j;
+        }
+        else if (s[j] >= f[i] && s[j] > finish)
+        {
+            cout << c[j] << " ";
+            i = j;
+        }
+    }
+}
+
+int main()
+{
+    int m;
+    cout << "Enter size : ";
+    cin >> m;
+    char c[m];
+    cout << "Enter the name of activity: ";
+    for (int i = 0; i < m; i++)
+    {
+        cin >> c[m];
+    }
+    int s[m];
+    cout << "Enter start array: ";
+    for (int i = 0; i < m; i++)
+    {
+        cin >> s[i];
+    }
+    int f[m];
+    cout << "Enter finish array: ";
+    for (int i = 0; i < m; i++)
+    {
+        cin >> f[i];
+    }
+    char choice;
+    cout << "Enter the choice of person: ";
+    cin >> choice;
+    for (int i = 0; i < m; i++)
+    {
+        cout<<c[i];
+    }
+    
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (f[i] > f[j])
+            {
+                swap(f[i], f[j]);
+                swap(s[i], s[j]);
+                swapc(c[i],c[j]);
+            }
+        }
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cout << c[i] << s[i] << f[i] << "\n";
+    }
+
+    printMaxActivities(s, f, c, m, choice);
+    return 0;
+}
